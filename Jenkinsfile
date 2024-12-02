@@ -3,7 +3,7 @@ pipeline {
 
     environment {  
         // Configuration de l'environnement Docker  
-        DOCKER_IMAGE = 'olyfaneva/front-end'  
+        DOCKER_IMAGE = 'olyfaneva/back-end'  
         DOCKER_TAG = 'latest'  
         REPO_URL = 'https://github.com/OlyFaneva/testcicd.git'  
         SSH_CREDENTIALS = credentials('vps')  // Assuming you have VPS credentials stored in Jenkins  

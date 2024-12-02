@@ -5,7 +5,7 @@
   tasks:
     - name: Pull Docker image
       docker_image:
-        name: olyfaneva/cicd
+        name: olyfaneva/back-end
         tag: latest
         source: pull
 
@@ -22,8 +22,8 @@
 
     - name: Run new container
       docker_container:
-        name: my-app
-        image: olyfaneva/projectnuxt:latest
+        name: back-end
+        image: olyfaneva/:latest
         state: started
         restart_policy: always
         ports:
