@@ -17,7 +17,7 @@
 
     - name: Remove old container
       docker_container:
-        name: my-app
+        name: back
         state: absent
 
     - name: Run new container
