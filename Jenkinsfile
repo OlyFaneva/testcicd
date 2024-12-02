@@ -4,7 +4,7 @@ pipeline {
     environment {  
         DOCKER_IMAGE = 'olyfaneva/projetfullphp'  // Change this to your actual image name  
         DOCKER_TAG = 'latest'  
-        REPO_URL = 'https://github.com/OlyFaneva/ProjetFullPHP.git'  // Replace with your repo URL  
+        REPO_URL = 'https://github.com/OlyFaneva/testcicd.git'  // Replace with your repo URL  
         SSH_CREDENTIALS = credentials('vps')  
     }  
 
