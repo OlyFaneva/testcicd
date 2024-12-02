@@ -4,7 +4,7 @@ pipeline {
     environment {  
         DOCKER_IMAGE = 'olyfaneva/projetfullphp'  // Change this to your actual image name  
         DOCKER_TAG = 'latest'  
-        REPO_URL = 'https://github.com/OlyFaneva/testcicd.git'  // Replace with your repo URL  
+        REPO_URL = 'git@github.com:OlyFaneva/testcicd.git'  // Replace with your repo URL  
         SSH_CREDENTIALS = credentials('vps')  
     }  
 
@@ -13,7 +13,9 @@ pipeline {
             steps {  
                 script {  
                     echo "Cloning repository: ${REPO_URL}"  
-                    git url: "${REPO_URL}", branch: 'main'  // Adjust branch if necessary  
+                    // Increase Git buffer size  
+                    sh 'git config --global http.postBuffer 524288000' // 500 MB  
+                    git url: "${REPO_URL}", branch: 'main'  
                 }  
             }  
         }  
