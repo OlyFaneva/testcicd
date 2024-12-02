@@ -1,0 +1,30 @@
+---
+- name: Deploy app to VPS
+  hosts: vps
+  become: yes
+  tasks:
+    - name: Pull Docker image
+      docker_image:
+        name: olyfaneva/cicd
+        tag: latest
+        source: pull
+
+    - name: Stop old container if running
+      docker_container:
+        name: my-app
+        state: stopped
+        restart_policy: no
+
+    - name: Remove old container
+      docker_container:
+        name: my-app
+        state: absent
+
+    - name: Run new container
+      docker_container:
+        name: my-app
+        image: olyfaneva/projectnuxt:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:3000"
