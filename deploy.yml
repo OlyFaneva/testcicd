@@ -11,7 +11,7 @@
 
     - name: Stop old container if running
       docker_container:
-        name: my-app
+        name: back
         state: stopped
         restart_policy: no
 
