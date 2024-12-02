@@ -53,9 +53,9 @@ pipeline {
                     sh '''
                         sshpass -p "${SSH_CREDENTIALS_PSW}" ssh -o StrictHostKeyChecking=no ${SSH_CREDENTIALS_USR}@89.116.111.200 << EOF
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker stop my-app || true
-                        docker rm my-app || true
-                        docker run -d --name my-app -p 80:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker stop back-end || true
+                        docker rm back-end || true
+                        docker run -d --name back-end -p 8080:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
 EOF
                     '''
                 }
