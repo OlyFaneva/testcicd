@@ -2,11 +2,10 @@ pipeline {
     agent any  
 
     environment {  
-        // Configuration de l'environnement Docker  
         DOCKER_IMAGE = 'olyfaneva/back-end'  
         DOCKER_TAG = 'latest'  
         REPO_URL = 'https://github.com/OlyFaneva/testcicd.git'  
-        SSH_CREDENTIALS = credentials('vps')  // Assuming you have VPS credentials stored in Jenkins  
+        SSH_CREDENTIALS = credentials('vps')  // Jenkins credentials for VPS  
     }  
 
     stages {  
@@ -52,12 +51,12 @@ pipeline {
                 script {  
                     echo "Deploying to VPS"  
                     sh '''  
-                        sshpass -p "${SSH_CREDENTIALS_PSW}" ssh -o StrictHostKeyChecking=no ${SSH_CREDENTIALS_USR}@89.116.111.200 << EOF  
-                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}  
-                            docker stop my-app || true  
-                            docker rm my-app || true  
-                            docker run -d --name my-app -p 80:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}  
-                        EOF  
+                        sshpass -p "${SSH_CREDENTIALS_PSW}" ssh -o StrictHostKeyChecking=no ${SSH_CREDENTIALS_USR}@89.116.111.200 << EOF
+                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker stop my-app || true
+                        docker rm my-app || true
+                        docker run -d --name my-app -p 80:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+EOF
                     '''  
                 }  
             }  
@@ -73,6 +72,18 @@ pipeline {
                     '''  
                 }  
             }  
+        }  
+    }  
+
+    post {  
+        always {  
+            echo "Pipeline completed."  
+        }  
+        success {  
+            echo "Pipeline executed successfully!"  
+        }  
+        failure {  
+            echo "Pipeline failed. Please check the logs."  
         }  
     }  
 }
