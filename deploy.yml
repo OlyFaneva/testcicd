@@ -23,7 +23,7 @@
     - name: Run new container
       docker_container:
         name: back-end
-        image: olyfaneva/:latest
+        image: olyfaneva/back-end:latest
         state: started
         restart_policy: always
         ports:
