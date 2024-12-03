@@ -1,14 +1,39 @@
-# Utilisation de l'image de base Jenkins
-FROM jenkins/jenkins:lts
+# Étape de construction  
+FROM composer:2.3 AS builder  
 
-# Devenir root pour installer des dépendances
-USER root
+# Définir le répertoire de travail  
+WORKDIR /app  
 
-# Mise à jour et installation de Git et Docker
-RUN apt-get update && \
-    apt-get install -y git docker.io && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Copier les fichiers composer.json et composer.lock  
+COPY composer.json composer.lock ./  
 
-# Revenir à l'utilisateur Jenkins après installation
-USER jenkins
+# Installer les dépendances  
+RUN composer install --no-dev --optimize-autoloader  
+
+# Copier le reste des fichiers du projet  
+COPY . .  
+
+# Étape de production  
+FROM php:8.1-fpm-alpine  
+
+# Définir le répertoire de travail  
+WORKDIR /app  
+
+# Installer les extensions nécessaires  
+RUN apk add --no-cache \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    zlib-dev \
+    curl \
+ && docker-php-ext-configure gd --with-jpeg --with-webp \
+ && docker-php-ext-install gd pdo pdo_mysql  
+
+# Copier les fichiers nécessaires depuis l'étape de construction  
+COPY --from=builder /app ./  
+
+# Exposer le port 9000  
+EXPOSE 9000  
+
+# Commande de démarrage pour PHP  
+CMD ["php-fpm"]
