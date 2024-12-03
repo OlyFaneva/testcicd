@@ -1,33 +1,42 @@
-# Étape de construction  
-FROM php:8.2-fpm-alpine
+# Étape de construction
+FROM php:8.2-fpm-alpine AS builder
 
-WORKDIR /app  
+WORKDIR /app
 
-# Copier les fichiers nécessaires  
-COPY composer.json composer.lock ./  
+# Installer les dépendances nécessaires pour composer
+RUN apk add --no-cache git curl libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
+    && docker-php-ext-install gd pdo pdo_mysql
 
-# Mettre à jour les dépendances pour assurer la compatibilité  
-RUN composer update --no-dev --ignore-platform-reqs  
+# Copier les fichiers nécessaires pour Composer
+COPY composer.json composer.lock ./
 
-# Copier le reste des fichiers du projet  
-COPY . .  
+# Installer les dépendances PHP
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && composer install --no-dev --ignore-platform-reqs
 
-# Étape de production  
-FROM php:8.1-fpm-alpine  
+# Copier les fichiers du projet
+COPY . .
 
-WORKDIR /app  
+# Étape de production
+FROM php:8.1-fpm-alpine
 
+WORKDIR /app
+
+# Copier les dépendances depuis le builder
+COPY --from=builder /app /app
+
+# Installer les dépendances système nécessaires
 RUN apk add --no-cache \
     libpng-dev \
     libjpeg-turbo-dev \
     libwebp-dev \
     zlib-dev \
-    curl \
  && docker-php-ext-configure gd --with-jpeg --with-webp \
- && docker-php-ext-install gd pdo pdo_mysql  
+ && docker-php-ext-install gd pdo pdo_mysql
 
-COPY --from=builder /app ./  
+# Exposer le port utilisé par PHP-FPM
+EXPOSE 9000
 
-EXPOSE 9000  
-
+# Commande pour lancer le serveur
 CMD ["php-fpm"]
