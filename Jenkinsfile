@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         // Configuration de l'environnement Docker
-        DOCKER_IMAGE = 'olyfaneva/mon-image'
+        DOCKER_IMAGE = 'olyfaneva/back-end'
         DOCKER_TAG = 'latest'
         REPO_URL = 'https://github.com/OlyFaneva/testcicd.git'
     }
@@ -47,4 +47,3 @@ pipeline {
 
     }
 }
-pipeline back-end
