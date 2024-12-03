@@ -14,7 +14,7 @@
         name: back
         image: olyfaneva/back-end:latest   # Ajout de l'image ici
         state: stopped
-        restart_policy: no
+        restart_policy: yes
 
     - name: Remove old container
       docker_container:
