@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'olyfaneva/back-end'
         DOCKER_TAG = 'latest'
         REPO_URL = 'https://github.com/OlyFaneva/testcicd.git'
-        SSH_CREDENTIALS = credentials('')  // Jenkins credentials for VPS
+        SSH_CREDENTIALS = credentials('vps')  // Jenkins credentials for VPS
     }
 
     stages {
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker image to Docker Hub'
-                    withDockerRegistry([credentialsId: 'dockebcmbm r', url: 'https://index.docker.io/v1/']) {
+                    withDockerRegistry([credentialsId: 'docker', url: 'https://index.docker.io/v1/']) {
                         sh '''
                             docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
                         '''
@@ -74,7 +74,8 @@ EOF
                 script {
                     echo 'Running Ansible playbook'
                     sh '''
-                            ansible-playbook -i hosts.ini deploy.yml
+                            sh 'ansible-playbook -i ./path/to/hosts.ini ./path/to/deploy.yml'
+
                     '''
                 }
             }
