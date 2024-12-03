@@ -5,11 +5,10 @@ pipeline {
         DOCKER_IMAGE = 'olyfaneva/back-end'
         DOCKER_TAG = 'latest'
         REPO_URL = 'https://github.com/OlyFaneva/testcicd.git'
-        SSH_CREDENTIALS = credentials('vps')  // Jenkins credentials for VPS
+        SSH_CREDENTIALS = credentials('vps')  // Jenkins credentials pour le VPS
     }
 
     stages {
-        // Étape 1: Cloner le dépôt Git
         stage('Clone Repository') {
             steps {
                 script {
@@ -19,7 +18,6 @@ pipeline {
             }
         }
 
-        // Étape 2: Construire l'image Docker
         stage('Build Docker Image') {
             steps {
                 script {
@@ -31,7 +29,6 @@ pipeline {
             }
         }
 
-        // Étape 3: Pousser l'image Docker vers Docker Hub
         stage('Push to Docker Hub') {
             steps {
                 script {
@@ -45,7 +42,6 @@ pipeline {
             }
         }
 
-        // Étape 4: Déployer sur le VPS
         stage('Deploy to VPS') {
             steps {
                 script {
@@ -57,24 +53,6 @@ pipeline {
                         docker rm back-end || true
                         docker run -d --name back-end -p 8080:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
 EOF
-                    '''
-                }
-            }
-        }
-
-        stage('Check Workspace') {
-            steps {
-                sh 'ls -R'
-            }
-        }
-
-        // Étape 5: Exécution du Playbook Ansible (facultatif)
-        stage('Run Ansible Playbook') {
-            steps {
-                script {
-                    echo 'Running Ansible playbook'
-                    sh '''
-                            ansible-playbook -i hosts.ini deploy.yml
                     '''
                 }
             }
