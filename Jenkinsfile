@@ -74,8 +74,7 @@ EOF
                 script {
                     echo 'Running Ansible playbook'
                     sh '''
-                            sh 'ansible-playbook -i ./path/to/hosts.ini ./path/to/deploy.yml'
-
+                            ansible-playbook -i hosts.ini deploy.yml
                     '''
                 }
             }
