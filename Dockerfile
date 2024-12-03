@@ -1,5 +1,5 @@
 # Étape de construction  
-FROM composer:2.3 AS builder  
+FROM php:8.2-fpm-alpine
 
 WORKDIR /app  
 
