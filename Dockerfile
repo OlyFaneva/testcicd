@@ -8,7 +8,7 @@ WORKDIR /app
 COPY composer.json composer.lock ./  
 
 # Installer les dépendances  
-RUN composer install --no-dev --optimize-autoloader  
+RUN composer install  
 
 # Copier le reste des fichiers du projet  
 COPY . .  
