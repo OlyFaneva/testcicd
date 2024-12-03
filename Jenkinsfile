@@ -41,20 +41,23 @@ pipeline {
         }
 
         stage('Deploy to VPS') {
-            steps {
-                script {
-                    echo 'Deploying to VPS'
-                    sh '''
-                        sshpass -p "${SSH_CREDENTIALS_PSW}" ssh -o StrictHostKeyChecking=no ${SSH_CREDENTIALS_USR}@89.116.111.200 << EOF
+    steps {
+        script {
+            echo 'Deploying to VPS'
+            withCredentials([usernamePassword(credentialsId: 'vps', usernameVariable: 'SSH_CREDENTIALS_USR', passwordVariable: 'SSH_CREDENTIALS_PSW')]) {
+                sh """
+                    sshpass -p "${SSH_CREDENTIALS_PSW}" ssh -o StrictHostKeyChecking=no ${SSH_CREDENTIALS_USR}@89.116.111.200 << EOF
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker stop back-end || true
-                        docker rm back-end || true
-                        docker run -d --name back-end -p 8090:3000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker stop backend || true
+                        docker rm backend || true
+                        docker run -d --name backend -p 8080:80 ${DOCKER_IMAGE}:${DOCKER_TAG}
 EOF
-                    '''
-                }
+                """
             }
         }
+    }
+}
+
 
         stage('Run Ansible Playbook') {
             steps {
