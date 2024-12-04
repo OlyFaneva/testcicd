@@ -50,7 +50,7 @@ pipeline {
                         docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
                         docker stop backend || true
                         docker rm backend || true
-                        docker run -d --name backend -p 8005:8000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker run -d --name backend -p 8000:8000 ${DOCKER_IMAGE}:${DOCKER_TAG}
 EOF
                 """
             }
