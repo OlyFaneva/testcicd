@@ -1,32 +1,32 @@
 ---
-  - name: Deploy app to VPS
-    hosts: vps
-    become: yes
-    tasks:
-      - name: Pull Docker image
-        docker_image:
-          name: olyfaneva/back-end
-          tag: latest
-          source: pull
-  
-      - name: Stop old container if running
-        docker_container:
-          name: back
-          state: stopped
-        ignore_errors: yes
-  
-      - name: Remove old container
-        docker_container:
-          name: back
-          state: absent
-        ignore_errors: yes
-  
-      - name: Run new container
-        docker_container:
-          name: back-end
-          image: olyfaneva/back-end:latest
-          state: started
-          restart_policy: always
-          published_ports:  # Correct key to map ports
-            - "8003:8000"
-  
+- name: Deploy app to VPS
+  hosts: vps
+  become: yes
+  tasks:
+    - name: Pull Docker image
+      docker_image:
+        name: olyfaneva/back-end
+        tag: latest
+        source: pull
+
+    - name: Stop old container if running
+      docker_container:
+        name: back
+        image: olyfaneva/back-end:latest   # Ajout de l'image ici
+        state: stopped
+        restart_policy: True
+
+    - name: Remove old container
+      docker_container:
+        name: back
+        state: absent
+      ignore_errors: yes
+
+    - name: Run new container
+      docker_container:
+        name: back-end
+        image: olyfaneva/back-end:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "8005:8000"
