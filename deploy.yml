@@ -20,6 +20,7 @@
       docker_container:
         name: back
         state: absent
+      ignore_errors: yes
 
     - name: Run new container
       docker_container:
