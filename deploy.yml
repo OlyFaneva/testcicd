@@ -28,5 +28,5 @@
           state: started
           restart_policy: always
           published_ports:  # Correct key to map ports
-            - "8000:8000"
+            - "8003:8000"
   
