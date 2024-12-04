@@ -14,13 +14,13 @@
         name: back
         image: olyfaneva/back-end:latest   # Ajout de l'image ici
         state: stopped
-        restart_policy: yes
+        restart_policy: True
 
     - name: Remove old container
       docker_container:
         name: back
         state: absent
-      ignore_errors: true
+      ignore_errors: yes
 
     - name: Run new container
       docker_container:
