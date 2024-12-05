@@ -9,13 +9,22 @@
         tag: latest
         source: pull
 
+    - name: Check if container is running
+      command: docker ps --filter "name=back-end" --format "{{.Names}}"
+      register: container_check
+      changed_when: false
+
     - name: Stop old container if running
       docker_container:
-        name: olyfaneva/back-end:latest
+        name: back-end
         state: stopped
-      ignore_errors: yes
+      when: container_check.stdout.find('back-end') != -1
 
-      
+    - name: Remove old container
+      docker_container:
+        name: back-end
+        state: absent
+      ignore_errors: yes
 
     - name: Run new container
       docker_container:
@@ -24,6 +33,6 @@
         state: started
         restart_policy: always
         published_ports:
-          - published: 8005    # Port sur l'hôte
-            target: 9000       # Port dans le conteneur
-            protocol: tcp      # Protocole utilisé
+          - published: 8005
+            target: 9000
+            protocol: tcp
