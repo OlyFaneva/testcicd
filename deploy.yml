@@ -27,5 +27,7 @@
         image: olyfaneva/back-end:latest
         state: started
         restart_policy: always
-        published_ports:  # Correct key to map ports
-          - "8005:9000"
+        published_ports:
+          - published: 8005   # Port sur l'hôte
+            target: 9000      # Port du conteneur
+            protocol: tcp     # Protocole
