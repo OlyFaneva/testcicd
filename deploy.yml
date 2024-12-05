@@ -11,15 +11,11 @@
 
     - name: Stop old container if running
       docker_container:
-        name: back
+        name: olyfaneva/back-end:latest
         state: stopped
       ignore_errors: yes
 
-    - name: Remove old container
-      docker_container:
-        name: back
-        state: absent
-      ignore_errors: yes
+      
 
     - name: Run new container
       docker_container:
@@ -28,6 +24,6 @@
         state: started
         restart_policy: always
         published_ports:
-          - published: 8005   # Port sur l'hôte
-            target: 9000      # Port du conteneur
-            protocol: tcp     # Protocole
+          - published: 8005    # Port sur l'hôte
+            target: 9000       # Port dans le conteneur
+            protocol: tcp      # Protocole utilisé
